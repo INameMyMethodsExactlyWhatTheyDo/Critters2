@@ -13,6 +13,8 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,10 +23,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -35,6 +43,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Translate;
@@ -49,10 +58,7 @@ public class Gui extends Application{
 	//https://codereview.stackexchange.com/questions/151800/snake-in-javafx/151845
     @Override
     public void start(Stage stage){
-    	//////////////////
-    
-    	
-    	///////////////
+
     	/**
     	 * Gui Structure
     	 */
@@ -61,80 +67,178 @@ public class Gui extends Application{
     	Pane rightPane = new Pane();
     	Pane leftPane = new Pane();
     	Pane bottomPane = new Pane();
+    	Pane topPane = new Pane();
     	ResizableCanvas canvas = new ResizableCanvas();
     	GraphicsContext gc = canvas.getGraphicsContext2D();
     	
     	
-    	//GridPane leftGrid = new GridPane();
+    	middlePane.setStyle("-fx-background-color: lightsteelblue;");
+
+    	/////
+    	//rightPane.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
     	/**
     	 * Gui Actors
     	 */
     	Button buttonMake1 = new Button("Make1");
     	Button buttonMake2 = new Button("Make2");
+    	
     	Button buttonStep = new Button("Step");
     	Button buttonClear = new Button("Clear");
     	Button buttonQuit = new Button("Quit");
-    	Button makeCritter = new Button("Submit");
+    	Button buttonMakeCritter = new Button("Submit");
     	Button buttonStats = new Button("stats");
+    	Button buttonEnterStat = new Button("Enter");
+    	Button buttonSeed = new Button("seed");
 
+    	//Button buttonSlide = new Button("go");
     	
     	TextField name = new TextField();
-    	name.setPromptText("Enter critter");
+    	name.setPromptText("Enter critter to make");
     	name.setPrefColumnCount(15);
     	name.getText();
+    	
+    	Label title = new Label();
+    	title.setText("Critters Game");
+    	topPane.getChildren().add(title);
+    	
+    	title.setFont(Font.font ("Verdana", 35));
+    	title.setTextFill(Color.DARKSLATEGRAY);
     	/**
     	 * Properties
     	 */
     	canvas.widthProperty().bind(middlePane.widthProperty());
         canvas.heightProperty().bind(middlePane.heightProperty());
         
+        //leftPane.getChildren().add(buttonMake1);
+       // leftPane.getChildren().add(buttonMake2);
         middlePane.getChildren().add(canvas);
-        leftPane.getChildren().add(buttonMake1);
-        leftPane.getChildren().add(buttonMake2);
-        leftPane.getChildren().add(buttonStep);
+
         leftPane.getChildren().add(buttonClear);
         leftPane.getChildren().add(buttonQuit);
 
-        
+        rightPane.getChildren().add(buttonStep);
+    	rightPane.setPadding(new Insets(10, 10, 10, 10));
+    	rightPane.getChildren().add(buttonMakeCritter);
+    	rightPane.getChildren().add(buttonStats);
+    	rightPane.getChildren().add(name);
+    	
     	mainPane.setCenter(middlePane);
     	mainPane.setLeft(leftPane);
     	mainPane.setRight(rightPane);
     	mainPane.setBottom(bottomPane);
-
-    	rightPane.setPadding(new Insets(10, 10, 10, 10));
-    	rightPane.getChildren().add(makeCritter);
-    	rightPane.getChildren().add(buttonStats);
-    	rightPane.getChildren().add(name);
-    	
+    	mainPane.setTop(topPane);
     	//Defining the Submit button
-    	makeCritter.setLayoutY(50);
+    	
+    	/**
+    	 * button layout
+    	 */
+    	buttonMakeCritter.setLayoutY(100);
+    	buttonStats.setLayoutY(400);
+    	buttonEnterStat.setLayoutY(500);
+    	buttonQuit.setLayoutY(500);
+    	buttonStep.setLayoutY(250);
+    	buttonClear.setLayoutY(550);
+
+    	Font buttonFont = new Font(20);
+    	int buttonX = 200;
+    	
+    	buttonMake1.setMaxSize(buttonX, buttonX);	
+    	buttonMake1.setFont(buttonFont);
+    	buttonMake2.setMaxSize(buttonX, buttonX);
+		buttonMake2.setLayoutY(50);
+		buttonMake2.setFont(buttonFont);
+	
+	//buttonStep.setMaxSize(buttonX, buttonX);
+	//buttonStep.setLayoutY(250);
+	//buttonStep.setFont(buttonFont);
 
     	//Adding a Label
     	Label labelCrit = new Label();
-    	labelCrit.setLayoutY(100);
+    	labelCrit.setLayoutY(150);
     	rightPane.getChildren().add(labelCrit);
+    	
+    	/**
+    	 * Slider and Labels for Sliders
+    	 */
+    	
+    	Slider makeSlider = new Slider();
+    	makeSlider.setMin(1);
+    	makeSlider.setMax(100);
+    	makeSlider.setValue(1);
+    	makeSlider.setShowTickLabels(true);
+    	makeSlider.setShowTickMarks(false);
+    	makeSlider.setMajorTickUnit(49);
+    	makeSlider.setMinorTickCount(5);
+    	makeSlider.setBlockIncrement(10);
+    	rightPane.getChildren().add(makeSlider);
+    	makeSlider.setLayoutY(50);
+
+    	Label makeSliderVal = new Label(Integer.toString((int) makeSlider.getValue()));
+    	makeSliderVal.setLayoutX(150);
+    	makeSliderVal.setLayoutY(50);
+    	rightPane.getChildren().add(makeSliderVal);
+    	
+    	Label critQuantity = new Label("Critters");
+    	critQuantity.setLayoutX(180);
+    	critQuantity.setLayoutY(50);
+    	rightPane.getChildren().add(critQuantity);
+    	
+    	Slider stepSlider = new Slider();
+    	stepSlider.setMin(1);
+    	stepSlider.setMax(100);
+    	stepSlider.setValue(1);
+    	stepSlider.setShowTickLabels(true);
+    	stepSlider.setShowTickMarks(false);
+    	stepSlider.setMajorTickUnit(49);
+    	stepSlider.setMinorTickCount(5);
+    	stepSlider.setBlockIncrement(10);
+    	rightPane.getChildren().add(stepSlider);
+    	stepSlider.setLayoutY(200);
+
+    	Label stepSliderVal = new Label(Integer.toString((int) stepSlider.getValue()));
+    	stepSliderVal.setLayoutX(150);
+    	stepSliderVal.setLayoutY(200);
+    	rightPane.getChildren().add(stepSliderVal);
+    	
+    	Label stepQuantity = new Label("Steps");
+    	stepQuantity.setLayoutX(180);
+    	stepQuantity.setLayoutY(200);
+    	rightPane.getChildren().add(stepQuantity);
+    	
+    	makeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    //cappuccino.setOpacity(new_val.doubleValue());
+            	int val = (int) makeSlider.getValue();
+            	makeSliderVal.setText(Integer.toString(val));
+            }
+        });
+    	
+    	stepSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    //cappuccino.setOpacity(new_val.doubleValue());
+            	int val = (int) stepSlider.getValue();
+            	stepSliderVal.setText(Integer.toString(val));
+            }
+        });
+    	
+    	
     	
     	Label labelStats = new Label();
     	labelStats.setLayoutX(200);
     	bottomPane.getChildren().add(labelStats);
-    	labelStats.setText("Here is where stats are put");
-
-    	buttonStats.setLayoutY(150);
-    	
+    	labelStats.setText("Here is where stats are put");    	
     	
 		//Defining the Name text field
 		TextField statCrit = new TextField();
 		statCrit.setPromptText("stats critter");
 		statCrit.setPrefColumnCount(15);
 		statCrit.getText();
-		statCrit.setLayoutY(200);
-	    	
+		statCrit.setLayoutY(450);
 
-	
-	 		Button enterStat = new Button("Enter");
-	 		enterStat.setLayoutY(250);
     	
-	 	buttonQuit.setLayoutY(400);
+    	//this button will quit the terminal
 	    buttonQuit.setOnAction(new EventHandler<ActionEvent>() {
 
 	       	@Override
@@ -146,67 +250,66 @@ public class Gui extends Application{
 	 		
     	//this button will show another button [ENTERSTAT] to enter critters into
 	    buttonStats.setOnAction(new EventHandler<ActionEvent>() {
-
-    	@Override
-    	    public void handle(ActionEvent e) {
-    	 		rightPane.getChildren().add(statCrit);
-    	 		rightPane.getChildren().add(enterStat);
-
-    	     }
+	    	@Override
+	    	    public void handle(ActionEvent e) {
+	    	 		rightPane.getChildren().add(statCrit);
+	    	 		rightPane.getChildren().add(buttonEnterStat);
+	
+	    	     }
     	 });
     	
-    	enterStat.setOnAction(new EventHandler<ActionEvent>() {
-
+	    //this button will run all stats
+	    buttonEnterStat.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
         	    public void handle(ActionEvent e) {
-        		
-        		try {
+        	
+        			try {
 
-					Object obj = null;
-					String runStats = "runStats";
-
-					String pkg = "assignment5.";
-
-					pkg = pkg + statCrit.getText();
-
-					Class c =   Class.forName(pkg);//.newInstance();
-					Critter crit = (Critter) c.newInstance();
-					Class cd = crit.getClass();
-
-					java.lang.reflect.Method method = c.getMethod("runStats", java.util.List.class);
-					String stringStats = (String) method.invoke(c, Critter.getInstances(pkg));
-			    	labelStats.setText(stringStats);
+						Object obj = null;
+						String runStats = "runStats";
+	
+						String pkg = "assignment5.";
+	
+						pkg = pkg + statCrit.getText();
+	
+						Class c =   Class.forName(pkg);//.newInstance();
+						Critter crit = (Critter) c.newInstance();
+						Class cd = crit.getClass();
+	
+						java.lang.reflect.Method method = c.getMethod("runStats", java.util.List.class);
+						String stringStats = (String) method.invoke(c, Critter.getInstances(pkg));
+				    	labelStats.setText(stringStats);
 
 				
-				} 
-    			catch (ClassNotFoundException e9) {
-    				System.out.println("Invalid Critter Class: " + statCrit.getText());
-    			} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IllegalArgumentException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InvalidCritterException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (NoSuchMethodException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (SecurityException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InstantiationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+        			} 
+        			catch (ClassNotFoundException e9) {
+        				System.out.println("Invalid Critter Class: " + statCrit.getText());
+        			} catch (IllegalAccessException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			} catch (IllegalArgumentException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			} catch (InvocationTargetException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			} catch (InvalidCritterException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			} catch (NoSuchMethodException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			} catch (SecurityException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			} catch (InstantiationException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			}
         		
         	 		System.out.println("hello");
         	 		rightPane.getChildren().remove(statCrit);
-        	 		rightPane.getChildren().remove(enterStat);
+        	 		rightPane.getChildren().remove(buttonEnterStat);
         	 		statCrit.clear();
         	     }
         	 });
@@ -214,81 +317,92 @@ public class Gui extends Application{
     	
     	
     	//Setting an action for the Submit button
-    	makeCritter.setOnAction(new EventHandler<ActionEvent>() {
+    	buttonMakeCritter.setOnAction(new EventHandler<ActionEvent>() {
 
     	@Override
     	    public void handle(ActionEvent e) {
+    		
 				try {
-					//int makeNum = Integer.parseInt(word3);
+					int makeNum = (int)makeSlider.getValue();
 					String pkg = "assignment5.";
 					pkg = pkg+name.getText();
+					for(int i = 0; i<makeNum; i++) {
 						Critter.makeCritter(pkg);
+						canvas.setX(Critter.getPopX());
+	    	    		canvas.setY(Critter.getPopY());
+	    	    		///sdfsdfsdfsd
+	    	    	
+	    	    		canvas.setS(Critter.getPopType());
+	    	    		canvas.setShape(Critter.getShapeType());
+	    	    		canvas.setC(Critter.getCritterPop());
+	    	    		canvas.drawCritters();
+					}
 					System.out.println("weeee " + name.getText());
 					labelCrit.setText(name.getText() + " was made!");
-			    //	rightPane.getChildren().add(labelCrit);
-
 
 				}
 
 				catch(InvalidCritterException d) {
-					System.out.println("Invalid Critter Class: " + name.getText());
-					labelCrit.setText("Invalid Critter Class: " + name.getText());
+					String none = "";
+					if(name.getText().equals("")) {
+						labelCrit.setText("Enter a critter to make!");
+    				}
+					else {
+						System.out.println("Invalid Critter Class: " + name.getText());
+						labelCrit.setText("Invalid Critter Class: " + name.getText());
 			    	//rightPane.getChildren().add(labelCrit);
+					}
 
 				}
 				name.clear();
     	     }
     	 });
+    
+//    	buttonMake1.setOnAction(new EventHandler<ActionEvent>() {
+//    	    @Override public void handle(ActionEvent e) {
+//    	    	//Critter.makeCritter(critter_class_name);
+//    	    	canvas.drawCritter("F", 0, 0);
+//    	    	try {
+//					Critter.makeCritter("assignment5.MyCritter1");
+//				} catch (InvalidCritterException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//    	    }
+//    	});
     	
-    	Font buttonFont = new Font(20);
-    	int buttonX = 200;
-    	buttonMake1.setMaxSize(buttonX, buttonX);	
-    	buttonMake1.setFont(buttonFont);
-    	buttonMake1.setOnAction(new EventHandler<ActionEvent>() {
-    	    @Override public void handle(ActionEvent e) {
-    	    	//Critter.makeCritter(critter_class_name);
-    	    	canvas.drawCritter("F", 0, 0);
-    	    	try {
-					Critter.makeCritter("assignment5.MyCritter1");
-				} catch (InvalidCritterException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-    	    }
-    	});
     	
-    	buttonMake2.setMaxSize(buttonX, buttonX);
-    	buttonMake2.setLayoutY(50);
-    	buttonMake2.setFont(buttonFont);
-    	
-    	buttonStep.setMaxSize(buttonX, buttonX);
-    	buttonStep.setLayoutY(100);
-    	buttonStep.setFont(buttonFont);
+    	//this button runs how many steps you want it to
     	buttonStep.setOnAction(new EventHandler<ActionEvent>() {
     	    @Override public void handle(ActionEvent e) {
-    	    	Critter.worldTimeStep();
-    	    	Critter.displayWorld();
-    	    	canvas.setX(Critter.getPopX());
-    	    	canvas.setY(Critter.getPopY());
-    	    	///sdfsdfsdfsd
+    	    	int stepNum = (int)stepSlider.getValue();
+    	    	for(int i = 0; i < stepNum; i++) {
+    	    		Critter.worldTimeStep();
+    	    		Critter.displayWorld();
+    	    		canvas.setX(Critter.getPopX());
+    	    		canvas.setY(Critter.getPopY());
+    	    		///sdfsdfsdfsd
     	    	
-    	    	canvas.setS(Critter.getPopType());
-    	    	canvas.setShape(Critter.getShapeType());
-    	    	canvas.setC(Critter.getCritterPop());
-    	    	canvas.drawCritters();
-    	    	System.out.print(Critter.getPopX().size());
+    	    		canvas.setS(Critter.getPopType());
+    	    		canvas.setShape(Critter.getShapeType());
+    	    		canvas.setC(Critter.getCritterPop());
+    	    		canvas.drawCritters();
+    	    		System.out.print(Critter.getPopX().size());
+    	    	}
     	    }
     	});
     	
-    	buttonClear.setMaxSize(buttonX, buttonX);
-    	buttonClear.setLayoutY(150);
-    	buttonClear.setFont(buttonFont);
+    	//clears the screen and stuff
     	buttonClear.setOnAction(new EventHandler<ActionEvent>() {
     	    @Override public void handle(ActionEvent e) {
-    	    	//Critter.makeCritter(critter_class_name);
-    	    	canvas.drawCritter("F", 0, 0);
+
+    	    	Critter.clearWorld();
+    	    	canvas.eraseScreen();
     	    }
     	});
+    	
+    	
+    	
     	
     	/*
     	 * Show

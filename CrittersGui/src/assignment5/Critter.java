@@ -321,6 +321,7 @@ public abstract class Critter {
 	 * so that they correctly update your grid/data structure.
 	 */
 	static abstract class TestCritter extends Critter {
+		
 		protected void setEnergy(int new_energy_value) {
 			super.energy = new_energy_value;
 		}
