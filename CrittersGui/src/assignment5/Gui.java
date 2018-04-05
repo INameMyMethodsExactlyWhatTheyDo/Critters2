@@ -72,9 +72,12 @@ public class Gui extends Application{
     	b2.setFont(new Font(20));
     	b2.setLayoutX(100);
     	b2.setMaxSize(200,200);
+        StackPane sp= new StackPane();
+
     	List<Circle> testPop = new java.util.ArrayList<Circle>();
         ResizableCanvas can = new ResizableCanvas();
-        StackPane stackp = new StackPane();
+        BorderPane stackp = new BorderPane();
+       // StackPane sp= new StackPane();
     	//button adds and moves the circles
         //we can make this step
         GraphicsContext g = can.getGraphicsContext2D();
@@ -83,13 +86,27 @@ public class Gui extends Application{
     		public void handle(ActionEvent e) {
     			//stage.setScene(s2);
     			Circle circEx = new Circle();
-    	    	//circEx.setCenterX(Math.random()*1600); 
-    	    	//circEx.setCenterY(Math.random()*800); 
+
     	    	circEx.setRadius(10.0f);
     			test2.add(circEx, 0, 4);
-
+    			double canX = circEx.getLayoutX();
+    			double canY = circEx.getLayoutY();
+    			
+    			//this will create random critter squares
+    		    can.drawCritter(test2);
+    			
     			testPop.add(circEx);
-    			g.fillRect(circEx.getCenterX()+100, circEx.getCenterY()+100, 8, 8);
+    			
+    			//use to convert index (row, col) to pixel position
+    			double pixelX = test2.getWidth()/Params.world_width;
+    		    double pixelY = test2.getHeight()/Params.world_height;
+
+				int indexY = test2.getRowIndex(circEx);
+				int indexX = test2.getColumnIndex(circEx);
+				
+    			g.fillRect(indexX*pixelX, indexY*pixelY, 20, 20);
+
+
     			
     			can.drawQueue.add(circEx);
     			circEx.getCenterX();
@@ -124,18 +141,22 @@ public class Gui extends Application{
     	});
     	//Scene s1 = new Scene(test, 500, 500);
         stage.setTitle("My app");
-        //stage.setScene(s1);
-        //stage.show();
 
-        //stackp.getChildren().add(can);
-       // test2.add(can, 2, 2);
-        stackp.getChildren().add(test2);
-        stackp.getChildren().add(can);
-        stackp.getChildren().add(b1);
+//        stackp.getChildren().add(test2);
+//        stackp.getChildren().add(can);
+//        stackp.getChildren().add(b1);
         
+        sp.getChildren().add(test2);
+        sp.getChildren().add(can);
+        stackp.setRight(b2);
+
+        stackp.setCenter(sp);
+        stackp.setLeft(b1);
+        //stackp.setRight(b2);
+
        // Bind canvas size to stack pane size.
-       can.widthProperty().bind(stackp.widthProperty());
-       can.heightProperty().bind(stackp.heightProperty());
+       can.widthProperty().bind(sp.widthProperty());
+       can.heightProperty().bind(sp.heightProperty());
     
     
     

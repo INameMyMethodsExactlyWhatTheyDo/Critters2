@@ -44,6 +44,17 @@ public abstract class Critter {
 	private int y_coord;
 	private boolean moved = false;	//if the critter has moved this turn
 	
+	public int getX() {
+		return x_coord;
+	}
+	
+	public int getY() {
+		return y_coord;
+	}
+	
+	private void moveCritters() {
+		
+	}
 	/**
 	 * Moves teh critter in direction by 1 spot
 	 */
