@@ -19,6 +19,7 @@ public abstract class Critter {
 	private static int w = Params.world_width;
 	private static int h = Params.world_height;
 	
+	protected CritterShape shape;
 	public enum CritterShape {
 		CIRCLE,
 		SQUARE,
@@ -494,7 +495,7 @@ public abstract class Critter {
 		}
 		for(int i = 0; i < Params.refresh_algae_count; i++){
 			try{
-				Critter.makeCritter("assignment4.Algae");
+				Critter.makeCritter("assignment5.Algae");
 			}catch(InvalidCritterException e){
 			}
 		}
@@ -593,6 +594,22 @@ public abstract class Critter {
 		ArrayList<String> ret = new ArrayList<String>();
 		for(int i = 0; i < Critter.population.size(); i++) {
 			ret.add(Critter.population.get(i).toString());
+		}
+		return ret;
+	}
+	
+	///testeing the shape of critters
+	public static ArrayList<CritterShape> getShapeType(){
+		ArrayList<CritterShape> ret = new ArrayList<CritterShape>();
+		for(int i = 0; i < Critter.population.size(); i++) {
+			ret.add(Critter.population.get(i).shape);
+		}
+		return ret;
+	}
+	public static ArrayList<Critter> getCritterPop(){
+		ArrayList<Critter> ret = new ArrayList<Critter>();
+		for(int i = 0; i < Critter.population.size(); i++) {
+			ret.add(Critter.population.get(i));
 		}
 		return ret;
 	}

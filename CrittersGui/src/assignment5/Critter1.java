@@ -31,6 +31,11 @@ public class Critter1 extends Critter {
 	private int goal_y;
 	private int dir;
 	private int randOrGo;
+	
+	public javafx.scene.paint.Color viewColor() { 
+		return javafx.scene.paint.Color.HOTPINK; 
+	}
+	
 	/**
 	 * This critter class creates critters that will gravitate towards certain places on the map
 	 */
@@ -39,6 +44,7 @@ public class Critter1 extends Critter {
 		goal = Critter.getRandomInt(cluster);
 		setGoalCoords();
 		randOrGo = Critter.getRandomInt(5);
+		shape = CritterShape.CIRCLE;
 	}
 	/**
 	 * This method indicates the coordinates of where the critter wants to go

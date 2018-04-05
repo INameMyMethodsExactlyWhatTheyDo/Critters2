@@ -15,6 +15,9 @@ class ResizableCanvas extends Canvas {
 	public List<Integer> drawQueueX = new java.util.ArrayList<Integer>();
 	public List<Integer> drawQueueY = new java.util.ArrayList<Integer>();
 	public List<String> drawQueueS = new java.util.ArrayList<String>();
+	public List<Critter.CritterShape> drawQueueShape = new java.util.ArrayList<Critter.CritterShape>();
+	public List<Critter> drawQueueC = new java.util.ArrayList<Critter>();
+
 	GraphicsContext gc = this.getGraphicsContext2D();
 	
     
@@ -50,6 +53,33 @@ class ResizableCanvas extends Canvas {
     	for(int i = 0; i < this.drawQueueS.size(); i++) {
     		drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
     	}
+    	
+    	for(int i = 0; i < this.drawQueueShape.size(); i++) {
+    		int posX = this.drawQueueX.get(i);
+    		int posY = this.drawQueueY.get(i);
+
+        	double pixelX = getWidth()/Params.world_width;
+            double pixelY = getHeight()/Params.world_height; 
+        	posX *=pixelX;
+    	    posY *=pixelY;
+    	   // gc.setFill(BLACK);
+    	    gc.setFill(this.drawQueueC.get(i).viewColor());
+    	    switch(this.drawQueueShape.get(i)) {
+    	    	case DIAMOND: 
+    	    		gc.fillOval(posX, posY, 7, 20);
+    	    	case TRIANGLE:
+    	    		gc.fillRect(posX, posY, 10, 10);
+    	    	case CIRCLE: 
+    	    		gc.fillOval(posX, posY, 10, 10);
+    	    	case SQUARE:
+    	    		gc.fillRect(posX, posY, 10, 10);
+    	    	case STAR: 
+    	    		gc.fillRoundRect(posX, posY, 10, 10, 4, 4);
+    	    		
+    	    }
+    	    //gc.setFont(new Font(15));
+    	   // gc.strokeText(name, posX, posY);
+    	}
     }
     
     public void setX(List<Integer> x) {
@@ -60,6 +90,12 @@ class ResizableCanvas extends Canvas {
 	}
 	public void setS(List<String> s) {
 		this.drawQueueS = s;
+	}
+	public void setShape(List<Critter.CritterShape> s) {
+		this.drawQueueShape = s;
+	}
+	public void setC(List<Critter> s) {
+		this.drawQueueC = s;
 	}
 	
     @Override

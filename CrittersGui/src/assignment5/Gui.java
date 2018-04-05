@@ -270,7 +270,11 @@ public class Gui extends Application{
     	    	Critter.displayWorld();
     	    	canvas.setX(Critter.getPopX());
     	    	canvas.setY(Critter.getPopY());
+    	    	///sdfsdfsdfsd
+    	    	
     	    	canvas.setS(Critter.getPopType());
+    	    	canvas.setShape(Critter.getShapeType());
+    	    	canvas.setC(Critter.getCritterPop());
     	    	canvas.drawCritters();
     	    	System.out.print(Critter.getPopX().size());
     	    }

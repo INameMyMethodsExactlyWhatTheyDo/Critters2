@@ -19,9 +19,14 @@ public class Craig extends Critter {
 			genes[k] = GENE_TOTAL / 8;
 		}
 		dir = Critter.getRandomInt(8);
+		shape = CritterShape.DIAMOND;
 	}
 	
 	public boolean fight(String not_used) { return true; }
+	
+	public javafx.scene.paint.Color viewColor() { 
+		return javafx.scene.paint.Color.DARKGOLDENROD; 
+	}
 
 	@Override
 	public void doTimeStep() {
