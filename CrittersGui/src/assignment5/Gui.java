@@ -35,6 +35,93 @@ public class Gui extends Application{
 	//https://codereview.stackexchange.com/questions/151800/snake-in-javafx/151845
     @Override
     public void start(Stage stage){
+    	/**
+    	 * Gui Structure
+    	 */
+    	BorderPane mainPane = new BorderPane();
+    	Pane middlePane = new Pane();
+    	Pane rightPane = new Pane();
+    	Pane leftPane = new Pane();
+    	ResizableCanvas canvas = new ResizableCanvas();
+    	GraphicsContext gc = canvas.getGraphicsContext2D();
+    	
+    	/**
+    	 * Gui Actors
+    	 */
+    	Button buttonMake1 = new Button("Make1");
+    	Button buttonMake2 = new Button("Make2");
+    	Button buttonStep = new Button("Step");
+    	Button buttonClear = new Button("Clear");
+    	
+    	/**
+    	 * Properties
+    	 */
+    	canvas.widthProperty().bind(middlePane.widthProperty());
+        canvas.heightProperty().bind(middlePane.heightProperty());
+        
+        middlePane.getChildren().add(canvas);
+        leftPane.getChildren().add(buttonMake1);
+        leftPane.getChildren().add(buttonMake2);
+        leftPane.getChildren().add(buttonStep);
+        leftPane.getChildren().add(buttonClear);
+        
+    	mainPane.setCenter(middlePane);
+    	mainPane.setLeft(leftPane);
+    	mainPane.setRight(rightPane);
+    	
+    	Font buttonFont = new Font(30);
+    	int buttonX = 200;
+    	buttonMake1.setMaxSize(buttonX, buttonX);	
+    	buttonMake1.setFont(buttonFont);
+    	buttonMake1.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	    	//Critter.makeCritter(critter_class_name);
+    	    	canvas.drawCritter("F", 0, 0);
+    	    	try {
+					Critter.makeCritter("assignment5.MyCritter1");
+				} catch (InvalidCritterException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    	    }
+    	});
+    	
+    	buttonMake2.setMaxSize(buttonX, buttonX);
+    	buttonMake2.setLayoutY(50);
+    	buttonMake2.setFont(buttonFont);
+    	
+    	buttonStep.setMaxSize(buttonX, buttonX);
+    	buttonStep.setLayoutY(100);
+    	buttonStep.setFont(buttonFont);
+    	buttonStep.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	    	Critter.worldTimeStep();
+    	    	Critter.displayWorld();
+    	    	canvas.setX(Critter.getPopX());
+    	    	canvas.setY(Critter.getPopY());
+    	    	canvas.setS(Critter.getPopType());
+    	    	canvas.drawCritters();
+    	    	System.out.print(Critter.getPopX().size());
+    	    }
+    	});
+    	
+    	buttonClear.setMaxSize(buttonX, buttonX);
+    	buttonClear.setLayoutY(150);
+    	buttonClear.setFont(buttonFont);
+    	buttonClear.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	    	//Critter.makeCritter(critter_class_name);
+    	    	canvas.drawCritter("F", 0, 0);
+    	    }
+    	});
+    	
+    	/*
+    	 * Show
+    	 */
+    	stage.setScene(new Scene(mainPane, 700, 700));
+    	stage.setTitle("Critters");
+    	stage.show();
+    	/*
     	Circle circEx = new Circle();
     	circEx.setCenterX(150.0f); 
     	circEx.setCenterY(135.0f); 
@@ -62,7 +149,6 @@ public class Gui extends Application{
     	l1.setMaxSize(200, 200);
     	b1.setFont(new Font(28));
     	b1.setMaxSize(100,100);
-    	
     	p2.getChildren().add(b2);
     	p2.getChildren().add(l2);
     	l2.setFont(new Font(20));
@@ -72,12 +158,11 @@ public class Gui extends Application{
     	b2.setFont(new Font(20));
     	b2.setLayoutX(100);
     	b2.setMaxSize(200,200);
-        StackPane sp= new StackPane();
-
+        Pane sp= new Pane();
     	List<Circle> testPop = new java.util.ArrayList<Circle>();
         ResizableCanvas can = new ResizableCanvas();
         BorderPane stackp = new BorderPane();
-       // StackPane sp= new StackPane();
+        //StackPane sp= new StackPane();
     	//button adds and moves the circles
         //we can make this step
         GraphicsContext g = can.getGraphicsContext2D();
@@ -105,11 +190,10 @@ public class Gui extends Application{
 				int indexX = test2.getColumnIndex(circEx);
 				
     			g.fillRect(indexX*pixelX, indexY*pixelY, 20, 20);
-
-
     			
     			can.drawQueue.add(circEx);
     			circEx.getCenterX();
+    			/*
     			for(int i = 0; i < testPop.size(); i++) {
     				int x = Critter.getRandomInt(2);
     				int y = Critter.getRandomInt(2);
@@ -122,6 +206,7 @@ public class Gui extends Application{
 
     	    		
     	    	}
+    	    	
     		}
     	});
     	
@@ -139,14 +224,14 @@ public class Gui extends Application{
     	    
     	    }
     	});
-    	//Scene s1 = new Scene(test, 500, 500);
+    	Scene s1 = new Scene(test, 500, 500);
         stage.setTitle("My app");
 
 //        stackp.getChildren().add(test2);
 //        stackp.getChildren().add(can);
 //        stackp.getChildren().add(b1);
         
-        sp.getChildren().add(test2);
+        //sp.getChildren().add(test2);
         sp.getChildren().add(can);
         stackp.setRight(b2);
 
@@ -157,15 +242,11 @@ public class Gui extends Application{
        // Bind canvas size to stack pane size.
        can.widthProperty().bind(sp.widthProperty());
        can.heightProperty().bind(sp.heightProperty());
-    
-    
-    
-    
        stage.setScene(new Scene(stackp, 700, 700));
        //stage.setScene(new Scene(bp,500, 500));
        stage.setTitle("Tip 1: Resizable Canvas");
        stage.show();
-        
+        */
     }
     
     public static void main(String[] args){
@@ -176,7 +257,6 @@ public class Gui extends Application{
 
     private void drawShapes(GraphicsContext gc) {
         gc.setFill(Color.BLUE);
-
         gc.fillOval(10, 60, 30, 30);
 
     }

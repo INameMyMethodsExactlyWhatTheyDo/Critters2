@@ -1,5 +1,6 @@
 package assignment5;
 
+import java.util.ArrayList;
 /* CRITTERS Critter.java
  * EE422C Project 4 submission by
  * Kyle Zhou
@@ -545,4 +546,26 @@ public abstract class Critter {
 			" has " + Critter.population.get(i).energy );
 		}
 	}
+	public static ArrayList<Integer> getPopX(){
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		for(int i = 0; i < Critter.population.size(); i++) {
+			ret.add(Critter.population.get(i).getX());
+		}
+		return ret;
+	}
+	public static ArrayList<Integer> getPopY(){
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		for(int i = 0; i < Critter.population.size(); i++) {
+			ret.add(Critter.population.get(i).getY());
+		}
+		return ret;
+	}
+	public static ArrayList<String> getPopType(){
+		ArrayList<String> ret = new ArrayList<String>();
+		for(int i = 0; i < Critter.population.size(); i++) {
+			ret.add(Critter.population.get(i).toString());
+		}
+		return ret;
+	}
+
 }
