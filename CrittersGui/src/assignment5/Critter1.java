@@ -225,7 +225,13 @@ public class Critter1 extends Critter {
 		System.out.print("" + botRight + " Critter1s going to the bottom right    ");
 
 		System.out.println();
-		return "running Critter2";
+		String ret = "";
+		ret+="" + critter1s.size() + " total Critter1s    ";
+		ret+="" + topLeft + " Critter1s going to the top left    ";
+		ret+= "" + topRight + " Critter1s going to the top right    ";
+		ret+="" + botLeft + " Critter1s going to the bottom left    ";
+		ret+= "" + botRight + " Critter1s going to the bottom right    ";
+		return ret;
 	}
 
 }

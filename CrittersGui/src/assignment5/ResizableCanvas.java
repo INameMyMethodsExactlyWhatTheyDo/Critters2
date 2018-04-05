@@ -17,15 +17,19 @@ class ResizableCanvas extends Canvas {
 	public List<String> drawQueueS = new java.util.ArrayList<String>();
 	public List<Critter.CritterShape> drawQueueShape = new java.util.ArrayList<Critter.CritterShape>();
 	public List<Critter> drawQueueC = new java.util.ArrayList<Critter>();
-
+	private int wide;
 	GraphicsContext gc = this.getGraphicsContext2D();
 	
     
     public ResizableCanvas() {
+    	wide = (int)getWidth();
       widthProperty().addListener(evt -> drawCritters());
       heightProperty().addListener(evt -> drawCritters());
     }
- 
+    
+    public int getCanvasWidth() {
+    	return wide;
+    }
     private void draw() {
       double width = getWidth();
       double height = getHeight();
@@ -79,7 +83,10 @@ class ResizableCanvas extends Canvas {
 	    	   // gc.setFill(BLACK);
 	    	    gc.setFill(this.drawQueueC.get(i).viewColor());
 	    	    if(this.drawQueueS.get(i).equals("@")) {
-	        		drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
+	    	    	gc.setFill(Color.DARKGREEN);
+    	    		gc.fillOval(posX, posY, 9, 9);
+
+	        		//drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
 	
 	    	    }
 	    	    else {

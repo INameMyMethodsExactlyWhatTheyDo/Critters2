@@ -101,11 +101,17 @@ public class Critter2 extends Critter {
 			}
 		}
 		System.out.print("" + critter2s.size() + " total Critter2s    ");
-		System.out.print("" + tall + " Critter1s make long and wide rectangles    ");
-		System.out.print("" + longer + " Critter1s make tall and narrow rectangles    ");
+		System.out.print("" + tall + " Critter2s make long and wide rectangles    ");
+		System.out.print("" + longer + " Critter2s make tall and narrow rectangles    ");
 
 		System.out.println();
-		return "critter2";
+		
+		String ret = "";
+		
+		ret+="" + critter2s.size() + " total Critter2s    ";
+		ret+="" + tall + " Critter2s make long and wide rectangles    ";
+		ret+="" + longer + " Critters make tall and narrow rectangles    ";
+		return ret;
 	}
 	
 	
