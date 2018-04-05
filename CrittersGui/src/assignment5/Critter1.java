@@ -191,7 +191,7 @@ public class Critter1 extends Critter {
 	 * This method displays the types of critters
 	 * @param critter1s List of critters whose type will be analyzed for stats
 	 */
-	public static void runStats(java.util.List<Critter> critter1s) {
+	public static String runStats(java.util.List<Critter> critter1s) {
 		int topLeft = 0;
 		int topRight = 0;
 		int botLeft = 0;
@@ -219,6 +219,7 @@ public class Critter1 extends Critter {
 		System.out.print("" + botRight + " Critter1s going to the bottom right    ");
 
 		System.out.println();
+		return "running Critter2";
 	}
 
 }

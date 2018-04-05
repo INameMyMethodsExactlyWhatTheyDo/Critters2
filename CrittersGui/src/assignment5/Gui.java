@@ -1,15 +1,27 @@
 package assignment5;
 
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+
+//import assignment4.Critter;
+//import assignment4.Critter;
+//import assignment4.InvalidCritterException;
 import javafx.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -19,6 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
@@ -26,6 +39,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Translate;
 import javafx.stage.*;
+import javafx.util.Duration;
 import javafx.scene.*;
 import javafx.event.*;
 
@@ -35,6 +49,10 @@ public class Gui extends Application{
 	//https://codereview.stackexchange.com/questions/151800/snake-in-javafx/151845
     @Override
     public void start(Stage stage){
+    	//////////////////
+    
+    	
+    	///////////////
     	/**
     	 * Gui Structure
     	 */
@@ -42,9 +60,12 @@ public class Gui extends Application{
     	Pane middlePane = new Pane();
     	Pane rightPane = new Pane();
     	Pane leftPane = new Pane();
+    	Pane bottomPane = new Pane();
     	ResizableCanvas canvas = new ResizableCanvas();
     	GraphicsContext gc = canvas.getGraphicsContext2D();
     	
+    	
+    	//GridPane leftGrid = new GridPane();
     	/**
     	 * Gui Actors
     	 */
@@ -52,7 +73,15 @@ public class Gui extends Application{
     	Button buttonMake2 = new Button("Make2");
     	Button buttonStep = new Button("Step");
     	Button buttonClear = new Button("Clear");
+    	Button buttonQuit = new Button("Quit");
+    	Button makeCritter = new Button("Submit");
+    	Button buttonStats = new Button("stats");
+
     	
+    	TextField name = new TextField();
+    	name.setPromptText("Enter critter");
+    	name.setPrefColumnCount(15);
+    	name.getText();
     	/**
     	 * Properties
     	 */
@@ -64,12 +93,154 @@ public class Gui extends Application{
         leftPane.getChildren().add(buttonMake2);
         leftPane.getChildren().add(buttonStep);
         leftPane.getChildren().add(buttonClear);
+        leftPane.getChildren().add(buttonQuit);
+
         
     	mainPane.setCenter(middlePane);
     	mainPane.setLeft(leftPane);
     	mainPane.setRight(rightPane);
+    	mainPane.setBottom(bottomPane);
+
+    	rightPane.setPadding(new Insets(10, 10, 10, 10));
+    	rightPane.getChildren().add(makeCritter);
+    	rightPane.getChildren().add(buttonStats);
+    	rightPane.getChildren().add(name);
     	
-    	Font buttonFont = new Font(30);
+    	//Defining the Submit button
+    	makeCritter.setLayoutY(50);
+
+    	//Adding a Label
+    	Label labelCrit = new Label();
+    	labelCrit.setLayoutY(100);
+    	rightPane.getChildren().add(labelCrit);
+    	
+    	Label labelStats = new Label();
+    	labelStats.setLayoutX(200);
+    	bottomPane.getChildren().add(labelStats);
+    	labelStats.setText("Here is where stats are put");
+
+    	buttonStats.setLayoutY(150);
+    	
+    	
+		//Defining the Name text field
+		TextField statCrit = new TextField();
+		statCrit.setPromptText("stats critter");
+		statCrit.setPrefColumnCount(15);
+		statCrit.getText();
+		statCrit.setLayoutY(200);
+	    	
+
+	
+	 		Button enterStat = new Button("Enter");
+	 		enterStat.setLayoutY(250);
+    	
+	 	buttonQuit.setLayoutY(400);
+	    buttonQuit.setOnAction(new EventHandler<ActionEvent>() {
+
+	       	@Override
+	            public void handle(ActionEvent e) {
+	       	 		System.exit(0);
+	       	     }
+	    });	 		
+	 		
+	 		
+    	//this button will show another button [ENTERSTAT] to enter critters into
+	    buttonStats.setOnAction(new EventHandler<ActionEvent>() {
+
+    	@Override
+    	    public void handle(ActionEvent e) {
+    	 		rightPane.getChildren().add(statCrit);
+    	 		rightPane.getChildren().add(enterStat);
+
+    	     }
+    	 });
+    	
+    	enterStat.setOnAction(new EventHandler<ActionEvent>() {
+
+        	@Override
+        	    public void handle(ActionEvent e) {
+        		
+        		try {
+
+					Object obj = null;
+					String runStats = "runStats";
+
+					String pkg = "assignment5.";
+
+					pkg = pkg + statCrit.getText();
+
+					Class c =   Class.forName(pkg);//.newInstance();
+					Critter crit = (Critter) c.newInstance();
+					Class cd = crit.getClass();
+
+					java.lang.reflect.Method method = c.getMethod("runStats", java.util.List.class);
+					String stringStats = (String) method.invoke(c, Critter.getInstances(pkg));
+			    	labelStats.setText(stringStats);
+
+				
+				} 
+    			catch (ClassNotFoundException e9) {
+    				System.out.println("Invalid Critter Class: " + statCrit.getText());
+    			} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InvocationTargetException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InvalidCritterException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NoSuchMethodException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SecurityException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        		
+        	 		System.out.println("hello");
+        	 		rightPane.getChildren().remove(statCrit);
+        	 		rightPane.getChildren().remove(enterStat);
+        	 		statCrit.clear();
+        	     }
+        	 });
+    	
+    	
+    	
+    	//Setting an action for the Submit button
+    	makeCritter.setOnAction(new EventHandler<ActionEvent>() {
+
+    	@Override
+    	    public void handle(ActionEvent e) {
+				try {
+					//int makeNum = Integer.parseInt(word3);
+					String pkg = "assignment5.";
+					pkg = pkg+name.getText();
+						Critter.makeCritter(pkg);
+					System.out.println("weeee " + name.getText());
+					labelCrit.setText(name.getText() + " was made!");
+			    //	rightPane.getChildren().add(labelCrit);
+
+
+				}
+
+				catch(InvalidCritterException d) {
+					System.out.println("Invalid Critter Class: " + name.getText());
+					labelCrit.setText("Invalid Critter Class: " + name.getText());
+			    	//rightPane.getChildren().add(labelCrit);
+
+				}
+				name.clear();
+    	     }
+    	 });
+    	
+    	Font buttonFont = new Font(20);
     	int buttonX = 200;
     	buttonMake1.setMaxSize(buttonX, buttonX);	
     	buttonMake1.setFont(buttonFont);
