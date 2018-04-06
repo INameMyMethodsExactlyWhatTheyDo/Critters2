@@ -71,9 +71,12 @@ class ResizableCanvas extends Canvas {
     	   // gc.setFill(BLACK);
     	    gc.setFill(this.drawQueueC.get(i).viewColor());
     	    if(this.drawQueueS.get(i).equals("@")) {
-        		drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
-
+        	//	drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
+    	    	gc.clearRect(posX, posY, 20, 20);
+    	    	gc.setFill(Color.DARKGREEN);
+	    		gc.fillOval(posX, posY, 9, 9);
     	    } else {
+    	    	gc.clearRect(posX, posY, 20, 20);
 	    	    switch(this.drawQueueShape.get(i)) {
 	    	    	case DIAMOND: 
 	    	    		gc.fillOval(posX, posY, 7, 20);

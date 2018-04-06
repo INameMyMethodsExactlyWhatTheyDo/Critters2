@@ -9,6 +9,7 @@ import assignment5.Critter.CritterShape;
 //import assignment4.Critter;
 //import assignment4.InvalidCritterException;
 import javafx.*;
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -55,12 +56,11 @@ import javafx.scene.*;
 import javafx.event.*;
 
 public class Gui extends Application{
-
+	public Timeline time;
 	static int count;
-	//https://codereview.stackexchange.com/questions/151800/snake-in-javafx/151845
     @Override
     public void start(Stage stage){
-
+    
     	/**
     	 * Gui Structure
     	 */
@@ -91,6 +91,8 @@ public class Gui extends Application{
     	Button buttonStats = new Button("stats");
     	Button buttonEnterStat = new Button("Enter");
     	Button buttonSeed = new Button("seed");
+    	Button buttonStartAn = new Button("Start");
+    	Button buttonStopAn = new Button("Stop");
 
     	TextField name = new TextField();
     	name.setPromptText("Enter critter to make");
@@ -104,8 +106,8 @@ public class Gui extends Application{
     	title.setFont(Font.font ("Verdana", 35));
     	title.setTextFill(Color.DARKSLATEGRAY);
     	
-    	Label stats = new Label("Hello\n");
-    	stats.setLayoutY(500);
+    	Label stats = new Label("STATS\n");
+    	stats.setLayoutY(450);
     	/**
     	 * Properties
     	 */
@@ -116,6 +118,10 @@ public class Gui extends Application{
 
         leftPane.getChildren().add(buttonClear);
         leftPane.getChildren().add(buttonQuit);
+        leftPane.getChildren().add(buttonStartAn);
+
+        leftPane.getChildren().add(buttonStopAn);
+
 
         rightPane.getChildren().add(buttonStep);
     	rightPane.setPadding(new Insets(10, 10, 10, 10));
@@ -139,11 +145,14 @@ public class Gui extends Application{
     	 * button layout
     	 */
     	buttonMakeCritter.setLayoutY(100);
-    	buttonStats.setLayoutY(400);
-    	buttonEnterStat.setLayoutY(500);
+    	buttonStats.setLayoutY(300);
+    	buttonEnterStat.setLayoutY(400);
     	buttonQuit.setLayoutY(500);
     	buttonStep.setLayoutY(250);
     	buttonClear.setLayoutY(450);
+    	buttonStartAn.setLayoutY(200);
+    	buttonStopAn.setLayoutY(250);
+
     	//buttonClear.setMaxWidth(200);
     	//buttonQuit.setMaxWidth(200);
 
@@ -160,6 +169,14 @@ public class Gui extends Application{
     	Label labelCrit = new Label();
     	labelCrit.setLayoutY(150);
     	rightPane.getChildren().add(labelCrit);
+    	
+    	Label labelErr = new Label();
+    	labelErr.setLayoutY(350);
+    	rightPane.getChildren().add(labelErr);
+    	
+    	Label animationLabel = new Label("Animation");
+    	animationLabel.setLayoutY(115);
+    	leftPane.getChildren().add(animationLabel);
     	
     	/**
     	 * Slider and Labels for Sliders
@@ -209,10 +226,34 @@ public class Gui extends Application{
     	stepQuantity.setLayoutY(200);
     	rightPane.getChildren().add(stepQuantity);
     	
+    	///////////////////////////////
+    	Slider speedSlider = new Slider();
+    	speedSlider.setMin(1);
+    	speedSlider.setMax(100);
+    	speedSlider.setValue(1);
+    	speedSlider.setShowTickLabels(true);
+    	speedSlider.setShowTickMarks(false);
+    	speedSlider.setMajorTickUnit(49);
+    	speedSlider.setMinorTickCount(5);
+    	speedSlider.setBlockIncrement(10);
+    	leftPane.getChildren().add(speedSlider);
+    	speedSlider.setLayoutY(150);
+
+    	Label speedSliderVal = new Label(Integer.toString((int)speedSlider.getValue()));
+    	speedSliderVal.setLayoutX(150);
+    	speedSliderVal.setLayoutY(150);
+    	leftPane.getChildren().add(speedSliderVal);
+    	
+    	Label speedQuantity = new Label("Speed");
+    	speedQuantity.setLayoutX(180);
+    	speedQuantity.setLayoutY(150);
+    	leftPane.getChildren().add(speedQuantity);
+    	
+    	//////////////////////////////////////
+    	
     	makeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
-                    //cappuccino.setOpacity(new_val.doubleValue());
             	int val = (int) makeSlider.getValue();
             	makeSliderVal.setText(Integer.toString(val));
             }
@@ -221,9 +262,16 @@ public class Gui extends Application{
     	stepSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
-                    //cappuccino.setOpacity(new_val.doubleValue());
             	int val = (int) stepSlider.getValue();
             	stepSliderVal.setText(Integer.toString(val));
+            }
+        });
+    	
+    	speedSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+            	int val = (int) speedSlider.getValue();
+            	speedSliderVal.setText(Integer.toString(val));
             }
         });
     	
@@ -233,22 +281,45 @@ public class Gui extends Application{
     	
     	Label labelStats = new Label();
     	labelStats.setLayoutX(100);
-    	labelStats.setLayoutY(20);
+    	labelStats.setLayoutY(30);
 
-    	labelStats.setFont(new Font("Cambria", 22));
+    	labelStats.setFont(new Font("Cambria", 18));
     	labelStats.setMaxWidth(500);
     	labelStats.setWrapText(true);
     	bottomPane.getChildren().add(labelStats);
-    	labelStats.setText("Here is where stats are put");    	
+    	labelStats.setText("");    
+    	
+    	Label labelIndiv = new Label();
+    	labelIndiv.setLayoutX(100);
+    	labelIndiv.setLayoutY(10);
+
+    	labelIndiv.setFont(new Font("Cambria", 18));
+    	labelIndiv.setMaxWidth(500);
+    	labelIndiv.setWrapText(true);
+    	bottomPane.getChildren().add(labelIndiv);
+    	labelIndiv.setText("Individual Stats:");   
     	
 		//Defining the Name text field
 		TextField statCrit = new TextField();
 		statCrit.setPromptText("stats critter");
 		statCrit.setPrefColumnCount(15);
 		statCrit.getText();
-		statCrit.setLayoutY(450);
+		statCrit.setLayoutY(350);
 
-    	
+    	//Button buttonSeed = new Button("Seed");
+        leftPane.getChildren().add(buttonSeed);
+    	buttonSeed.setLayoutY(400);
+
+
+	    buttonSeed.setOnAction(new EventHandler<ActionEvent>() {
+	       	@Override
+	            public void handle(ActionEvent e) {
+	       			int seedNum = Critter.getRandomInt(1000);
+	       			Critter.setSeed(seedNum);
+	       	     }
+	    });
+		
+		
     	//this button will quit the terminal
 	    buttonQuit.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -295,8 +366,30 @@ public class Gui extends Application{
 
 				
         			} 
+    				catch(InvalidCritterException d) {
+    					String none = "";
+    					if(statCrit.getText().equals("")) {
+    						labelErr.setText("Enter a critter for stats!");
+        				}
+    					else {
+    						System.out.println("Invalid Critter Class: " + statCrit.getText());
+    						labelErr.setText("Invalid Critter Class: " + statCrit.getText());
+    			    	//rightPane.getChildren().add(labelCrit);
+    					}
+
+    				}
         			catch (ClassNotFoundException e9) {
-        				System.out.println("Invalid Critter Class: " + statCrit.getText());
+        				//System.out.println("Invalid Critter Class: " + statCrit.getText());
+						//labelCrit.setText("Invalid Critter Class: " + statCrit.getText());
+        				String none = "";
+    					if(statCrit.getText().equals("")) {
+    						labelErr.setText("Enter a critter for stats!");
+        				}
+    					else {
+    						System.out.println("Invalid Critter Class: " + statCrit.getText());
+    						labelErr.setText("Invalid Critter Class: " + statCrit.getText());
+    			    	//rightPane.getChildren().add(labelCrit);
+    					}
         			} catch (IllegalAccessException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
@@ -306,10 +399,7 @@ public class Gui extends Application{
         			} catch (InvocationTargetException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
-        			} catch (InvalidCritterException e1) {
-        				// TODO Auto-generated catch block
-        				e1.printStackTrace();
-        			} catch (NoSuchMethodException e1) {
+        			}  catch (NoSuchMethodException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
         			} catch (SecurityException e1) {
@@ -350,7 +440,7 @@ public class Gui extends Application{
 	    	    		canvas.setC(Critter.getCritterPop());
 	    	    		canvas.drawCritters();
 					}
-					System.out.println("weeee " + name.getText());
+					//System.out.println("weeee " + name.getText());
 					labelCrit.setText(name.getText() + " was made!");
 
 				}
@@ -371,35 +461,84 @@ public class Gui extends Application{
     	     }
     	 });
     
-//    	buttonMake1.setOnAction(new EventHandler<ActionEvent>() {
-//    	    @Override public void handle(ActionEvent e) {
-//    	    	//Critter.makeCritter(critter_class_name);
-//    	    	canvas.drawCritter("F", 0, 0);
-//    	    	try {
-//					Critter.makeCritter("assignment5.MyCritter1");
-//				} catch (InvalidCritterException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//    	    }
-//    	});
-    	Timeline timeline = new Timeline(
-    		    new KeyFrame(Duration.seconds(0.1), e -> {
-    		        updateStep(canvas, stats);
-    		    })
-    		);
+
     	
     	//this button runs how many steps you want it to
+    	buttonStartAn.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	    	//DISABLE ALL BUTTONS
+
+    	    	buttonStep.setDisable(true);
+    	    	buttonClear.setDisable(true);
+    	    	buttonQuit.setDisable(true);
+    	    	buttonMakeCritter.setDisable(true);
+    	    	buttonStats.setDisable(true);
+    	    	buttonEnterStat.setDisable(true);
+    	    	buttonSeed.setDisable(true);
+    	    	buttonStartAn.setDisable(true);
+    	    	makeSlider.setDisable(true);
+    	    	stepSlider.setDisable(true);
+    	    	speedSlider.setDisable(true);
+
+    	    	
+    	    	int speedNum = (int)speedSlider.getValue();
+    	    	
+    	    	//if(speedNum != 1) {
+    	    	double speed = 1;
+    	    	speed= speed/speedNum;
+    	    	KeyFrame keyframe = new KeyFrame(Duration.seconds(speed), e1 ->
+    	    	{ updateStep(canvas, stats); });
+    	    	
+
+    	    	 Timeline timeline = new Timeline(keyframe);
+    	    //	keyframe.
+    	    		timeline.setCycleCount(Animation.INDEFINITE);
+    	    		timeline.play();
+    	    		setT(timeline);
+	    		//}else {
+	    		//	updateStep(canvas, stats);
+	    		//}
+    	    	
+    	    }
+    	});
+
+    	
+    	buttonStopAn.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+	    		getT().stop();
+
+    	    	buttonStep.setDisable(false);
+    	    	buttonClear.setDisable(false);
+    	    	buttonQuit.setDisable(false);
+    	    	buttonMakeCritter.setDisable(false);
+    	    	buttonStats.setDisable(false);
+    	    	buttonEnterStat.setDisable(false);
+    	    	buttonSeed.setDisable(false);
+    	    	buttonStartAn.setDisable(false);
+    	    	makeSlider.setDisable(false);
+    	    	stepSlider.setDisable(false);
+    	    	speedSlider.setDisable(false);
+    	    	
+
+    	    }
+    	});
+    	
     	buttonStep.setOnAction(new EventHandler<ActionEvent>() {
     	    @Override public void handle(ActionEvent e) {
     	    	int stepNum = (int)stepSlider.getValue();
-    	    	if(stepNum != 1) {
-    	    		timeline.setCycleCount(stepNum);
-    	    		timeline.play();
-	    		}else {
-	    			updateStep(canvas, stats);
-	    		}
-    	    	
+    	    	for(int i = 0; i < stepNum; i++) {
+    	    	Critter.worldTimeStep();
+    			//Critter.displayWorld();
+    		
+    	    	}
+    	    	canvas.setX(Critter.getPopX());
+    			canvas.setY(Critter.getPopY());
+    		
+    			canvas.setS(Critter.getPopType());
+    			canvas.setShape(Critter.getShapeType());
+    			canvas.setC(Critter.getCritterPop());
+    			canvas.drawCritters();
+    			stats.setText((Critter.getStats()));
     	    }
     	});
     	
@@ -408,6 +547,9 @@ public class Gui extends Application{
     	    @Override public void handle(ActionEvent e) {
     	    	Critter.clearWorld();
     	    	canvas.eraseScreen();
+    	    	makeSlider.setValue(1);
+    	    	stepSlider.setValue(1);
+    	    	speedSlider.setValue(1);
     	    }
     	});
     	/*
@@ -423,6 +565,13 @@ public class Gui extends Application{
         Application.launch(args);
 
     }
+    
+	public Timeline getT() {
+		return time;
+	}
+	public void setT(Timeline t) {
+		time = t;
+	}
     public void updateStep(ResizableCanvas canvas, Label stats) {
     	Critter.worldTimeStep();
 		Critter.displayWorld();

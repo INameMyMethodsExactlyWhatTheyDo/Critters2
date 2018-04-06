@@ -189,7 +189,10 @@ public class Critter1 extends Critter {
 	 * This method determines whether the critter will fight or not
 	 */
 	public boolean fight(String opponent) {
-		if (getEnergy() > 20) return true;
+		String looked = look(chooseDir(),false);
+		//if (looked.equals(" ")) {
+		//	return true;
+		//}
 		return false;
 	}
 	

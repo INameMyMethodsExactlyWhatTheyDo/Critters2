@@ -55,14 +55,18 @@ public class Critter2 extends Critter {
 	 * This method is invoked every worldTimeStep, choose critter direction and reproduction
 	 */
 	public void doTimeStep() {
-		
+
 		int walkOrRun = Critter.getRandomInt(1);
-		if(walkOrRun == 0) {
-			walk(chooseDir());
-		}
-		else {
+		int dir = chooseDir();
+		String looked = look(dir, false);
+
+	//	if(looked.equals("") == true) {
+
+			walk(dir);
+		//}
+		//else {
 			run(chooseDir());
-		}
+	//	}
 		
 		//reproduce
 		if(getEnergy() >= Params.min_reproduce_energy + 20) {

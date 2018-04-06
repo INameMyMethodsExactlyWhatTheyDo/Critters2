@@ -27,7 +27,74 @@ public abstract class Critter {
 		DIAMOND,
 		STAR
 	}
-	
+public String look(int direction, boolean steps) {
+		energy -=Params.look_energy_cost;
+		int Xco = this.getX();
+		int Yco = this.getY();
+		//moving in the direction
+		int walkNum = 0;
+		if(steps == true) {
+			walkNum = 2;
+		}
+		else {
+			walkNum = 1;
+		}
+		
+		if(direction == 0) {
+			Xco = Xco + walkNum;
+			//y_coord = y_coord;
+		}
+		if(direction == 1) {
+			Xco = Xco + walkNum;
+			Yco = Yco + walkNum;		}
+		if(direction == 2) {
+			//x_coord = x_coord;
+			Yco = Yco + walkNum;
+		}
+		if(direction == 3) {
+			Xco = Xco - walkNum;
+			Yco = Yco + walkNum;
+		}
+		if(direction == 4) {
+			Xco = Xco - walkNum;
+			//y_coord = y_coord;
+		}
+		if(direction == 5) {
+			Xco = Xco - walkNum;
+			Yco = Yco - walkNum;
+		}
+		if(direction == 6) {
+			//x_coord = x_coord;
+			Yco = Yco - walkNum;
+		}
+		if(direction == 7) {
+			Xco = Xco + walkNum;
+			Yco = Yco - walkNum;
+		}
+		
+		//wrap around if coords arent on the map
+		if(Xco >= Params.world_width) {
+			Xco = 0;
+		}
+		if(Xco < 0) {
+			Xco = Params.world_width;
+		}
+		if(y_coord >= Params.world_height) {
+			y_coord = 0;
+		}
+		if(y_coord < 0) {
+			y_coord = Params.world_height;
+		}
+		String ret = null;
+		for(int i = 0; i < population.size(); i++) {
+			if(population.get(i).getX() == Xco && population.get(i).getY() == Yco) {
+				ret = population.get(i).toString();
+			}
+		}
+		return ret;
+		
+		
+	}
 	/* the default color is white, which I hope makes critters invisible by default
 	 * If you change the background color of your View component, then update the default
 	 * color to be the same as you background 
