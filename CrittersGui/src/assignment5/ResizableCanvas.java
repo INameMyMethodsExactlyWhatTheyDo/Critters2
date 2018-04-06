@@ -16,15 +16,19 @@ class ResizableCanvas extends Canvas {
 	public List<String> drawQueueS = new java.util.ArrayList<String>();
 	public List<Critter.CritterShape> drawQueueShape = new java.util.ArrayList<Critter.CritterShape>();
 	public List<Critter> drawQueueC = new java.util.ArrayList<Critter>();
-
+	private int wide;
 	GraphicsContext gc = this.getGraphicsContext2D();
 	
     
     public ResizableCanvas() {
+    	wide = (int)getWidth();
       widthProperty().addListener(evt -> drawCritters());
       heightProperty().addListener(evt -> drawCritters());
     }
- 
+    
+    public int getCanvasWidth() {
+    	return wide;
+    }
     private void draw() {
       double width = getWidth();
       double height = getHeight();
@@ -82,8 +86,49 @@ class ResizableCanvas extends Canvas {
 	    	    	case STAR: 
 	    	    		gc.fillOval(posX, posY, 15, 5);
 	    	    		
+//=======
+//    		boolean draw = true;
+//    		for(int j = 0; j < this.drawQueueShape.size(); j++) {
+//    			if(this.drawQueueX.get(j) == this.drawQueueX.get(i) && this.drawQueueY.get(j) == this.drawQueueY.get(i)) {
+//    				draw = false;
+//    			}
+//    		}
+    		//if(draw == true) {
+/*
+	    		int posX = this.drawQueueX.get(i);
+	    		int posY = this.drawQueueY.get(i);
+	
+	        	double pixelX = getWidth()/Params.world_width;
+	            double pixelY = getHeight()/Params.world_height; 
+	        	posX *=pixelX;
+	    	    posY *=pixelY;
+	    	   // gc.setFill(BLACK);
+	    	    gc.setFill(this.drawQueueC.get(i).viewColor());
+	    	    if(this.drawQueueS.get(i).equals("@")) {
+	    	    	gc.setFill(Color.DARKGREEN);
+    	    		gc.fillOval(posX, posY, 9, 9);
+
+	        		//drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
+	
+	    	    }
+	    	    else {
+		    	    switch(this.drawQueueShape.get(i)) {
+		    	    	case DIAMOND: 
+		    	    		gc.fillOval(posX, posY, 7, 20);
+		    	    	case TRIANGLE:
+		    	    		gc.fillRect(posX, posY, 10, 10);
+		    	    	case CIRCLE: 
+		    	    		gc.fillOval(posX, posY, 10, 10);
+		    	    	case SQUARE:
+		    	    		gc.fillRect(posX, posY, 10, 10);
+		    	    	case STAR: 
+		    	    		gc.fillOval(posX, posY, 15, 5);
+		    	    		
+		    	    }
+		    	    */
 	    	    }
     	    }
+    	    
 		}
     }
 

@@ -86,7 +86,7 @@ public class Gui extends Application{
     	
     	Button buttonStep = new Button("Step");
     	Button buttonClear = new Button("Clear");
-    	Button buttonQuit = new Button("Quit");
+    	Button buttonQuit = new Button("Quit ");
     	Button buttonMakeCritter = new Button("Submit");
     	Button buttonStats = new Button("stats");
     	Button buttonEnterStat = new Button("Enter");
@@ -143,7 +143,9 @@ public class Gui extends Application{
     	buttonEnterStat.setLayoutY(500);
     	buttonQuit.setLayoutY(500);
     	buttonStep.setLayoutY(250);
-    	buttonClear.setLayoutY(550);
+    	buttonClear.setLayoutY(450);
+    	//buttonClear.setMaxWidth(200);
+    	//buttonQuit.setMaxWidth(200);
 
     	Font buttonFont = new Font(20);
     	int buttonX = 200;
@@ -225,10 +227,17 @@ public class Gui extends Application{
             }
         });
     	
-    	
+    	Label fillerLabel = new Label();
+    	fillerLabel.setLayoutY(100);
+    	bottomPane.getChildren().add(fillerLabel);
     	
     	Label labelStats = new Label();
-    	labelStats.setLayoutX(200);
+    	labelStats.setLayoutX(100);
+    	labelStats.setLayoutY(20);
+
+    	labelStats.setFont(new Font("Cambria", 22));
+    	labelStats.setMaxWidth(500);
+    	labelStats.setWrapText(true);
     	bottomPane.getChildren().add(labelStats);
     	labelStats.setText("Here is where stats are put");    	
     	
@@ -280,7 +289,9 @@ public class Gui extends Application{
 	
 						java.lang.reflect.Method method = c.getMethod("runStats", java.util.List.class);
 						String stringStats = (String) method.invoke(c, Critter.getInstances(pkg));
+						
 				    	labelStats.setText(stringStats);
+				 
 
 				
         			} 
@@ -402,7 +413,7 @@ public class Gui extends Application{
     	/*
     	 * Show
     	 */
-    	stage.setScene(new Scene(mainPane, 700, 700));
+    	stage.setScene(new Scene(mainPane, 1000, 700));
     	stage.setTitle("Critters");
     	stage.show();
  
