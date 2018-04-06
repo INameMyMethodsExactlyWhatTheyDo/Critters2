@@ -11,7 +11,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 
 class ResizableCanvas extends Canvas {
-	//private StackPane stackp;// = new StackPane();
 	public List<Integer> drawQueueX = new java.util.ArrayList<Integer>();
 	public List<Integer> drawQueueY = new java.util.ArrayList<Integer>();
 	public List<String> drawQueueS = new java.util.ArrayList<String>();
@@ -57,52 +56,37 @@ class ResizableCanvas extends Canvas {
     }
     public void drawCritters() {
     	gc.clearRect(0, 0, getWidth(), getHeight());
-//    	for(int i = 0; i < this.drawQueueS.size(); i++) {
-//    		drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
-//    	}
-    	
     	for(int i = 0; i < this.drawQueueShape.size(); i++) {
-//    		boolean draw = true;
-//    		for(int j = 0; j < this.drawQueueShape.size(); j++) {
-//    			if(this.drawQueueX.get(j) == this.drawQueueX.get(i) && this.drawQueueY.get(j) == this.drawQueueY.get(i)) {
-//    				draw = false;
-//    			}
-//    		}
-    		//if(draw == true) {
-	    		int posX = this.drawQueueX.get(i);
-	    		int posY = this.drawQueueY.get(i);
-	
-	        	double pixelX = getWidth()/Params.world_width;
-	            double pixelY = getHeight()/Params.world_height; 
-	        	posX *=pixelX;
-	    	    posY *=pixelY;
-	    	   // gc.setFill(BLACK);
-	    	    gc.setFill(this.drawQueueC.get(i).viewColor());
-	    	    if(this.drawQueueS.get(i).equals("@")) {
-	        		drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
-	
+    		int posX = this.drawQueueX.get(i);
+    		int posY = this.drawQueueY.get(i);
+
+        	double pixelX = getWidth()/Params.world_width;
+            double pixelY = getHeight()/Params.world_height; 
+        	posX *=pixelX;
+    	    posY *=pixelY;
+    	   // gc.setFill(BLACK);
+    	    gc.setFill(this.drawQueueC.get(i).viewColor());
+    	    if(this.drawQueueS.get(i).equals("@")) {
+        		drawCritter(this.drawQueueS.get(i),this.drawQueueX.get(i),this.drawQueueY.get(i));
+
+    	    } else {
+	    	    switch(this.drawQueueShape.get(i)) {
+	    	    	case DIAMOND: 
+	    	    		gc.fillOval(posX, posY, 7, 20);
+	    	    	case TRIANGLE:
+	    	    		gc.fillRect(posX, posY, 10, 10);
+	    	    	case CIRCLE: 
+	    	    		gc.fillOval(posX, posY, 10, 10);
+	    	    	case SQUARE:
+	    	    		gc.fillRect(posX, posY, 10, 10);
+	    	    	case STAR: 
+	    	    		gc.fillOval(posX, posY, 15, 5);
+	    	    		
 	    	    }
-	    	    else {
-		    	    switch(this.drawQueueShape.get(i)) {
-		    	    	case DIAMOND: 
-		    	    		gc.fillOval(posX, posY, 7, 20);
-		    	    	case TRIANGLE:
-		    	    		gc.fillRect(posX, posY, 10, 10);
-		    	    	case CIRCLE: 
-		    	    		gc.fillOval(posX, posY, 10, 10);
-		    	    	case SQUARE:
-		    	    		gc.fillRect(posX, posY, 10, 10);
-		    	    	case STAR: 
-		    	    		gc.fillOval(posX, posY, 15, 5);
-		    	    		
-		    	    }
-	    	    }
-    		//}
-    	    //gc.setFont(new Font(15));
-    	   // gc.strokeText(name, posX, posY);
-    	}
+    	    }
+		}
     }
-    
+
     public void setX(List<Integer> x) {
     	this.drawQueueX = x;
     }

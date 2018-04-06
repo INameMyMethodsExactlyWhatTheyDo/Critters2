@@ -290,6 +290,7 @@ public abstract class Critter {
 	 * @param critters List of Critters.
 	 */
 	public static String runStats(List<Critter> critters) {
+		String ret = "" + critters.size() + " critters as follows --\n";
 		System.out.print("" + critters.size() + " critters as follows -- ");
 		java.util.Map<String, Integer> critter_count = new java.util.HashMap<String, Integer>();
 		for (Critter crit : critters) {
@@ -304,10 +305,14 @@ public abstract class Critter {
 		String prefix = "";
 		for (String s : critter_count.keySet()) {
 			System.out.print(prefix + s + ":" + critter_count.get(s));
-			prefix = ", ";
+			ret += prefix + s + ":" + critter_count.get(s) + "\n";
+			//prefix = ", ";
 		}
 		System.out.println();	
-		return "running stats";
+		return ret;
+	}
+	public static String getStats() {
+		return runStats(Critter.population);
 	}
 	
 	/* the TestCritter class allows some critters to "cheat". If you want to 
