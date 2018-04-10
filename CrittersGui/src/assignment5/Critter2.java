@@ -58,13 +58,13 @@ public class Critter2 extends Critter {
 
 		int walkOrRun = Critter.getRandomInt(1);
 		int dir = chooseDir();
-		String looked = look(dir, false);
+	//	String looked = look(dir, false);
 
-	//	if(looked.equals("") == true) {
-
-			walk(dir);
-		//}
-		//else {
+//		if(looked.equals("") == true) {
+//
+//			walk(dir);
+//		}
+//		else {
 			run(chooseDir());
 	//	}
 		

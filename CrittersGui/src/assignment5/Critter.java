@@ -39,56 +39,61 @@ public String look(int direction, boolean steps) {
 		else {
 			walkNum = 1;
 		}
+		System.out.println();
 		
-		if(direction == 0) {
+		if(direction == 2) {
 			Xco = Xco + walkNum;
 			//y_coord = y_coord;
-		}
-		if(direction == 1) {
-			Xco = Xco + walkNum;
-			Yco = Yco + walkNum;		}
-		if(direction == 2) {
-			//x_coord = x_coord;
-			Yco = Yco + walkNum;
 		}
 		if(direction == 3) {
-			Xco = Xco - walkNum;
-			Yco = Yco + walkNum;
+			Xco = Xco + walkNum;
+			Yco = Yco + walkNum;		
 		}
 		if(direction == 4) {
-			Xco = Xco - walkNum;
-			//y_coord = y_coord;
+			//x_coord = x_coord;
+			Yco = Yco + walkNum;
 		}
 		if(direction == 5) {
 			Xco = Xco - walkNum;
-			Yco = Yco - walkNum;
+			Yco = Yco + walkNum;
 		}
 		if(direction == 6) {
+			Xco = Xco - walkNum;
+			//y_coord = y_coord;
+		}
+		if(direction == 7) {
+			Xco = Xco - walkNum;
+			Yco = Yco - walkNum;
+		}
+		if(direction == 0) {
 			//x_coord = x_coord;
 			Yco = Yco - walkNum;
 		}
-		if(direction == 7) {
+		if(direction == 1) {
 			Xco = Xco + walkNum;
 			Yco = Yco - walkNum;
 		}
 		
 		//wrap around if coords arent on the map
 		if(Xco >= Params.world_width) {
-			Xco = 0;
+			Xco = Xco%Params.world_width;
 		}
 		if(Xco < 0) {
-			Xco = Params.world_width;
+			Xco += Params.world_width;
 		}
-		if(y_coord >= Params.world_height) {
-			y_coord = 0;
+		if(Yco >= Params.world_height) {
+			Yco =Yco%Params.world_height;
 		}
-		if(y_coord < 0) {
-			y_coord = Params.world_height;
+		if(Yco < 0) {
+			Yco += Params.world_height;
 		}
 		String ret = null;
 		for(int i = 0; i < population.size(); i++) {
 			if(population.get(i).getX() == Xco && population.get(i).getY() == Yco) {
 				ret = population.get(i).toString();
+				//ret = "t";
+				//System.out.println("Found !!!!!!!!!!!!!!!!!!!!!" + ret);
+				break;
 			}
 		}
 		return ret;
